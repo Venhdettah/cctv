@@ -42,4 +42,4 @@ class ServoControl(AbstractOutput):
         pass
 
     def set_output(self, direction):
-        gpio.output(self.servo.item(["direction-pin"]), direction)
+        gpio.output(self.servo["direction-pin"], direction)
