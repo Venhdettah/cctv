@@ -61,13 +61,11 @@ class ServoControl(AbstractOutput):
         if direction == "left":
             if self.position >= self.servo_config["max-angle"]:
                 logger.warning("servo cannot turn left any further")
-                return None
             self.position += speed
 
         elif direction == "right":
             if self.position <= self.servo_config["min-angle"]:
                 logger.warning("servo cannot turn right any further")
-                return None
             self.position -= speed
 
         else:
@@ -85,7 +83,7 @@ class ServoControl(AbstractOutput):
 
         self.servo["_pwm-pin"].ChangeDutyCycle(self.position)
 
-        self.timer = threading.Timer(2, self._stop_servo)
+        self.timer = threading.Timer(0.5, self._stop_servo)
         self.timer.start()
         logger.info("Servo occupied")
 
