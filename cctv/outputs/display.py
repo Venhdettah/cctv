@@ -15,7 +15,7 @@ from ..abstract import AbstractOutput
 logger = logging.getLogger(__name__)
 
 
-class Diplay(AbstractOutput):
+class Display(AbstractOutput):
     def __init__(self):
         logger.info("initializing display")
         pass

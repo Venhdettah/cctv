@@ -20,7 +20,7 @@ class CameraSystem(object):
         self.input_us.set_callback(self.input_received)
 
     def start(self):
-        logger.info("start camera system")
+        logger.info("starting camera system")
         self.input_us.start()
         # self.input_cm.start()
         # self.output_dp.start()
@@ -33,14 +33,14 @@ class CameraSystem(object):
             logger.error("something went wrong in output sc")
 
     def stop(self):
-        logger.info("stop camera system")
+        logger.info("stopping camera system")
         self.input_us.stop()
         # self.input_cm.stop()
         # self.output_dp.stop()
         self.output_sc.stop()
 
     def terminate(self):
-        logger.info("terminate camera system")
+        logger.info("terminating camera system")
         self.input_us.terminate()
         # self.input_cm.terminate()
         # self.output_dp.terminate()

@@ -22,5 +22,8 @@ class CameraModule(AbstractInput):
     def start(self):
         logger.info("starting camera module")
 
-    def cleanup(self):
-        logger.info("cleanup camera module")
+    def stop(self):
+        logger.info("stopping camera module")
+
+    def terminate(self):
+        logger.info("terminating camera module")

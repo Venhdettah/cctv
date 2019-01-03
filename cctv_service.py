@@ -18,17 +18,17 @@ def main():
 
 def eth_connected():
     # ethenet is connected, simply stop this service
-    neat_print("ethernet is connected, not starting TCU")
+    neat_print("ethernet is connected, not starting CCTV")
     exit(0)
 
 
 def eth_not_connected():
     # ethernet is not connected, start the tcu script
-    neat_print("ethernet is not connected, starting TCU...")
-    import tcu_main
+    neat_print("ethernet is not connected, starting CCTV...")
+    import cctv_main
 
     try:
-        tcu_main.main()
+        cctv_main.main()
     except BaseException:
         traceback.print_exc()
         neat_print("cctv_main.main() raised error")

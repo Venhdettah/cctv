@@ -4,7 +4,7 @@ import logging.config
 import signal
 import time
 
-from cctv.systems import Camera_system
+from cctv.system import CameraSystem
 
 with open("cctv/config/logging_config.json", "r") as fd:
     logging.config.dictConfig(json.load(fd))
@@ -29,7 +29,7 @@ def main():
 
     # initalizing CCTV
     logger.info("initializing CCTV & controls")
-    cctv = Camera_system()
+    cctv = CameraSystem()
 
     # starting CCTV
     logger.info("starting CCTV system")
@@ -37,7 +37,7 @@ def main():
 
     # wait until the input listener stops
     try:
-        while cctv.input._running:
+        while True:
             time.sleep(0.01)
     except ServiceExit:
         pass

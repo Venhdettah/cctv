@@ -1,11 +1,11 @@
 {
   "pins": {
-    "direction-pin": 7
+    "direction-pin": 40
   },
-  "pwm-config": {
+  "servo-config": {
     "frequency": 50,
-    "min-angle": 0,
-    "max-angle": 180
+    "min-angle": 2.5,
+    "max-angle": 10.5
   }
 
 }

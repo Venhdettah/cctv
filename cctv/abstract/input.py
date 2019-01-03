@@ -7,7 +7,11 @@ class AbstractInput(ABC):
         pass
 
     @abstractmethod
-    def cleanup(self):
+    def stop(self):
+        pass
+
+    @abstractmethod
+    def terminate(self):
         pass
 
     @abstractmethod
