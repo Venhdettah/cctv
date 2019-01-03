@@ -1,0 +1,57 @@
+import json
+import logging
+import logging.config
+import signal
+import time
+
+from cctv.systems import Camera_system
+
+with open("cctv/config/logging_config.json", "r") as fd:
+    logging.config.dictConfig(json.load(fd))
+logger = logging.getLogger(__name__)
+
+
+class ServiceExit(Exception):
+    pass
+
+
+def service_shutdown(signum, frame):
+    logging.info("caught signal {}".format(signum))
+
+    # raise custom exception to cleanly terminate all threads
+    raise ServiceExit
+
+
+def main():
+    # initialize signal handlers
+    signal.signal(signal.SIGTERM, service_shutdown)
+    signal.signal(signal.SIGINT, service_shutdown)
+
+    # initalizing CCTV
+    logger.info("initializing CCTV & controls")
+    cctv = Camera_system()
+
+    # starting CCTV
+    logger.info("starting CCTV system")
+    cctv.start()
+
+    # wait until the input listener stops
+    try:
+        while cctv.input._running:
+            time.sleep(0.01)
+    except ServiceExit:
+        pass
+
+    # stopping CCTV
+    logger.info("stopping CCTV & controls")
+    cctv.stop()
+
+    # terminating CCTV
+    logger.info("shutting down CCTV system")
+    cctv.terminate()
+    return
+
+
+if __name__ == "__main__":
+    logger.info("running main")
+    main()

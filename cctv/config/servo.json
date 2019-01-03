@@ -1,0 +1,11 @@
+{
+  "pins": {
+    "direction-pin": 7
+  },
+  "pwm-config": {
+    "frequency": 50,
+    "min-angle": 0,
+    "max-angle": 180
+  }
+
+}

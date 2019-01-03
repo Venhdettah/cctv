@@ -1,0 +1,15 @@
+[Unit]
+Description=CCTV Service (Camera Surveillance Camper)
+After=network.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=on-failure
+RestartSec=1s
+User=root
+WorkingDirectory=/home/hetorus/projects/cctv
+ExecStart=/home/hetorus/projects/cctv/.venv/bin/python3 cctv_service.py
+
+[Install]
+WantedBy=multi-user.target

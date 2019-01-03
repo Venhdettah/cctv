@@ -1,0 +1,4 @@
+# configuration of the black formatter
+[tool.black]
+# set the line length that black should use
+line-length = 79
