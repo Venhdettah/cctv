@@ -22,10 +22,16 @@ def service_shutdown(signum, frame):
     raise ServiceExit
 
 
+def ignore_signal(signum, frame):
+    logging.info("caught signal {}".format(signum))
+    pass
+
+
 def main():
     # initialize signal handlers
     signal.signal(signal.SIGTERM, service_shutdown)
     signal.signal(signal.SIGINT, service_shutdown)
+    signal.signal(signal.SIGHUP, ignore_signal)
 
     # initalizing CCTV
     logger.info("initializing CCTV & controls")
@@ -47,7 +53,7 @@ def main():
     cctv.stop()
 
     # terminating CCTV
-    logger.info("shutting down CCTV system")
+    logger.info("terminating CCTV system")
     cctv.terminate()
     return
 

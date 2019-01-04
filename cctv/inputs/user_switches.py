@@ -46,7 +46,7 @@ class UserSwitches(AbstractInput):
         if switch == self.switches_pins["k1-pin"]:
             logger.info("K1 button pressed")
             # restart python script for development
-            subprocess.run(["systemctl", "restart", "cctv"])
+            subprocess.run(["sudo", "systemctl", "restart", "cctv"])
 
         elif switch == self.switches_pins["k2-pin"]:
             # logger.info("K2 button pressed")
