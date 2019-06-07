@@ -28,26 +28,39 @@ class ServoControl(AbstractOutput):
         self.timer = None
 
         # servo position var
-        self.position = 6.5
+        self.position = {}
 
         # use pinheader instead of GPIOx
         gpio.setmode(gpio.BOARD)
 
-        # set pin to output
-        gpio.setup(self.servo["direction-pin"], gpio.OUT)
+        self.servo["_pwm-pins"] = {}
 
-        # make pwm instance
-        self.servo["_pwm-pin"] = gpio.PWM(
-            self.servo["direction-pin"], self.servo_config["frequency"]
-        )
+        self.camera_index = "0"
+
+        for index, pin in self.servo["direction-pins"].items():
+
+            # set pin to output
+            gpio.setup(pin, gpio.OUT)
+
+            # make pwm instance
+            self.servo["_pwm-pins"][index] = gpio.PWM(
+                pin, self.servo_config["frequency"]
+            )
+
+            # set camera position center
+            self.position[index] = 6.5
 
     def start(self):
         logger.info("starting servo control")
-        self.servo["_pwm-pin"].start(0)
+
+        for index, pin in self.servo["direction-pins"].items():
+            self.servo["_pwm-pins"][index].start(0)
 
     def stop(self):
         logger.info("stopping servo control")
-        self.servo["_pwm-pin"].stop()
+
+        for index, pin in self.servo["direction-pins"].items():
+            self.servo["_pwm-pins"][index].stop()
         pass
 
     def terminate(self):
@@ -59,35 +72,55 @@ class ServoControl(AbstractOutput):
         speed = rotation_data["speed"]
 
         if direction == "left":
-            if self.position >= self.servo_config["max-angle"]:
+            if (
+                self.position[self.camera_index]
+                >= self.servo_config["max-angle"]
+            ):
                 logger.warning("servo cannot turn left any further")
-            self.position += speed
+            self.position[self.camera_index] += speed
 
         elif direction == "right":
-            if self.position <= self.servo_config["min-angle"]:
+            if (
+                self.position[self.camera_index]
+                <= self.servo_config["min-angle"]
+            ):
                 logger.warning("servo cannot turn right any further")
-            self.position -= speed
+            self.position[self.camera_index] -= speed
 
         else:
             logger.warning("invalid direction: {}".format(direction))
             return None
 
-        self.position = max(self.position, self.servo_config["min-angle"])
-        self.position = min(self.position, self.servo_config["max-angle"])
+        self.position[self.camera_index] = max(
+            self.position[self.camera_index], self.servo_config["min-angle"]
+        )
+        self.position[self.camera_index] = min(
+            self.position[self.camera_index], self.servo_config["max-angle"]
+        )
 
         self._set_servo()
+
+    def set_servo(self, camera_index):
+        if self.timer:
+            self.timer.cancel()
+
+        self._stop_servo()
+
+        self.camera_index = str(camera_index)
 
     def _set_servo(self):
         if self.timer:
             self.timer.cancel()
 
-        self.servo["_pwm-pin"].ChangeDutyCycle(self.position)
+        self.servo["_pwm-pins"][self.camera_index].ChangeDutyCycle(
+            self.position[self.camera_index]
+        )
 
         self.timer = threading.Timer(0.5, self._stop_servo)
         self.timer.start()
-        logger.info("Servo occupied")
+        logger.info("Servo {} occupied".format(self.camera_index))
 
     def _stop_servo(self):
-        self.servo["_pwm-pin"].ChangeDutyCycle(0)
-        logger.info("Servo in free rotation")
+        self.servo["_pwm-pins"][self.camera_index].ChangeDutyCycle(0)
+        logger.info("Servo {} in free rotation".format(self.camera_index))
         self.current_direction = None

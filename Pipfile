@@ -6,6 +6,9 @@ name = "pypi"
 [packages]
 "rpi.gpio" = "*"
 keyboard = "*"
+imutils = "*"
+pillow = "*"
+numpy = "*"
 
 [dev-packages]
 pytest = "*"

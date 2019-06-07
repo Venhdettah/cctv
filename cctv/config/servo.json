@@ -1,11 +1,13 @@
 {
   "pins": {
-    "direction-pin": 40
+    "direction-pins": {
+      "0": 40,
+      "1": 38
+    }
   },
   "servo-config": {
     "frequency": 50,
     "min-angle": 2.5,
     "max-angle": 10.5
   }
-
 }

@@ -19,6 +19,7 @@ class CameraSystem(object):
         self.output_sc = ServoControl()
 
         self.input_us.set_callback(self.input_received)
+        self.input_cm.set_callback(self.camera_index_received)
 
     def start(self):
         logger.info("starting camera system")
@@ -32,6 +33,12 @@ class CameraSystem(object):
             self.output_sc.set_output(direction)
         except BaseException:
             logger.error("something went wrong in output sc")
+
+    def camera_index_received(self, camera_index):
+        try:
+            self.output_sc.set_servo(camera_index)
+        except BaseException:
+            logger.error("something went wrong in output cm", exc_info=True)
 
     def stop(self):
         logger.info("stopping camera system")
