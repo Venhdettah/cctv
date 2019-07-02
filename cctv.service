@@ -8,8 +8,8 @@ Type=simple
 Restart=on-failure
 RestartSec=1s
 User=root
-WorkingDirectory=/home/hetorus/projects/cctv
-ExecStart=/home/hetorus/projects/cctv/.venv/bin/python3 cctv_service.py
+WorkingDirectory=/home/venhdettah/projects/cctv
+ExecStart=SDL_VIDEODRIVER="fbcon" SDL_FBDEV="/dev/fb0" /usr/bin/python3 cctv_service.py
 
 [Install]
 WantedBy=multi-user.target

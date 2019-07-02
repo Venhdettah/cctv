@@ -34,7 +34,10 @@ class CameraModule(AbstractInput):
     def init_cams(self, which_cam_idx):
 
         if self.camera is not None:
-            self.camera.stop()
+            try:
+                self.camera.stop()
+            except:
+                pass
 
         # gets a list of available cameras.
         self.clist = pygame.camera.list_cameras()
@@ -46,13 +49,18 @@ class CameraModule(AbstractInput):
         try:
             cam_id = self.clist[which_cam_idx]
         except IndexError:
-            cam_id = self.clist[0]
+            which_cam_idx = 0
+            cam_id = self.clist[which_cam_idx]
 
         # creates the camera of the specified size and in RGB colorspace
         self.camera = pygame.camera.Camera(cam_id, self.size, "RGB")
 
         # starts the camera
-        self.camera.start()
+        try:
+            self.camera.start()
+        except:
+            print("failed to start camera with idx {}, retrying with {}".format(which_cam_idx, which_cam_idx + 1))
+            self.init_cams(which_cam_idx + 1)
 
         # self.clock = pygame.time.Clock()
 
@@ -106,7 +114,7 @@ class CameraModule(AbstractInput):
                         self.init_cams(e.key - pygame.K_0)
                 if e.type == pygame.MOUSEBUTTONDOWN:
                     self.camindex += 1
-                    if self.camindex >= len(self.clist):
+                    if self.camindex >= 2:  # TODO: unhardcode this  len(self.clist):
                         self.camindex = 0
                     logging.info(self.camindex)
                     self.init_cams(self.camindex)
